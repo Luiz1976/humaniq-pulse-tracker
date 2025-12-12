@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { DashboardView } from "@/components/dashboard/DashboardView";
-
+import { LinkedInView } from "@/components/linkedin/LinkedInView";
 import { ListenerView } from "@/components/listener/ListenerView";
 import { TemplatesView } from "@/components/templates/TemplatesView";
 import { SettingsView } from "@/components/settings/SettingsView";
@@ -189,6 +189,8 @@ const Index = () => {
     switch (activeTab) {
       case "dashboard":
         return <DashboardView />;
+      case "linkedin":
+        return <LinkedInView />;
       case "listener":
         return <ListenerView />;
       case "templates":

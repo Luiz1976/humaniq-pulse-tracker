@@ -1,1 +1,19 @@
 project_id = "gdpyuutcmgxtqshxjguz"
+
+[functions.linkedin-oauth]
+verify_jwt = false
+
+[functions.linkedin-generate-content]
+verify_jwt = false
+
+[functions.linkedin-post]
+verify_jwt = false
+
+[functions.linkedin-listen]
+verify_jwt = false
+
+[functions.linkedin-comment]
+verify_jwt = false
+
+[functions.linkedin-scheduler]
+verify_jwt = false
