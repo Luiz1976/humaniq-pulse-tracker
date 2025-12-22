@@ -6,6 +6,13 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+/**
+ * LinkedIn Daily Scheduler
+ * Executa automaticamente via cron job para:
+ * 1. Verificar se deve postar (baseado em settings)
+ * 2. Publicar próximo post ready
+ * 3. Gerar novos posts se necessário
+ */
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -15,138 +22,152 @@ serve(async (req) => {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
-
-    // Get current time in Brasília timezone (UTC-3)
-    const now = new Date();
-    const brasiliaOffset = -3 * 60;
-    const brasiliaTime = new Date(now.getTime() + (brasiliaOffset + now.getTimezoneOffset()) * 60000);
-    const currentHour = brasiliaTime.getHours();
-
-    console.log(`Scheduler running at ${brasiliaTime.toISOString()} (Brasília hour: ${currentHour})`);
-
-    // Get all accounts with settings
-    const { data: accounts, error: accountsError } = await supabase
-      .from("linkedin_accounts")
-      .select("*, linkedin_settings(*)");
-
-    if (accountsError) {
-      throw accountsError;
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error("Missing Supabase configuration");
     }
 
-    const results = {
-      posts_published: 0,
-      listening_scans: 0,
-      errors: [] as string[],
-    };
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    for (const account of accounts || []) {
-      const settings = account.linkedin_settings?.[0];
-      
-      if (!settings) {
-        console.log(`No settings for account ${account.id}, skipping`);
+    console.log("🤖 LinkedIn Daily Scheduler - Starting...");
+
+    // Get all accounts with auto-posting enabled
+    const { data: settings, error: settingsError } = await supabase
+      .from("linkedin_settings")
+      .select("*, linkedin_accounts(*)")
+      .eq("auto_post_enabled", true);
+
+    if (settingsError) throw settingsError;
+
+    if (!settings || settings.length === 0) {
+      console.log("No accounts with auto-posting enabled");
+      return new Response(JSON.stringify({
+        success: true,
+        message: "No accounts configured for auto-posting"
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    const results = [];
+
+    for (const setting of settings) {
+      const account = setting.linkedin_accounts;
+      if (!account) continue;
+
+      console.log(`\n📊 Checking account: ${account.name || account.id}`);
+
+      // Check if today is weekend (Sat=6, Sun=0) - Skip on weekends
+      const now = new Date();
+      const currentDay = now.getUTCDay(); // 0 = Sunday, 6 = Saturday
+
+      if (currentDay === 0 || currentDay === 6) {
+        const dayName = currentDay === 0 ? 'Sunday' : 'Saturday';
+        console.log(`⏭️ Skipping ${dayName} - LinkedIn posts only Monday-Friday`);
+        results.push({
+          account_id: account.id,
+          action: "skipped",
+          reason: `weekend (${dayName})`
+        });
         continue;
       }
 
-      // Check if auto-posting is enabled and within time window
-      const startHour = settings.post_start_hour || 6;
-      const endHour = settings.post_end_hour || 22;
-      const intervalMinutes = settings.post_interval_minutes || 60;
+      console.log(`✅ Weekday check passed (day ${currentDay})`);
 
-      if (settings.auto_post_enabled && currentHour >= startHour && currentHour < endHour) {
-        // Check if enough time has passed since last post
-        const lastPost = settings.last_post_at ? new Date(settings.last_post_at) : null;
-        const minutesSinceLastPost = lastPost 
-          ? (now.getTime() - lastPost.getTime()) / (1000 * 60)
-          : Infinity;
+      // Check if we should post (time window and interval)
+      const currentHour = now.getUTCHours() - 3; // Convert UTC to BRT (UTC-3)
+      const startHour = setting.post_start_hour || 0;
+      const endHour = setting.post_end_hour || 23;
 
-        if (minutesSinceLastPost >= intervalMinutes) {
-          console.log(`Publishing post for account ${account.name}`);
-          
-          try {
-            const postResponse = await fetch(`${SUPABASE_URL}/functions/v1/linkedin-post`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-              },
-              body: JSON.stringify({ account_id: account.id }),
-            });
+      console.log(`⏰ Current hour (BRT): ${currentHour}, Window: ${startHour}-${endHour}`);
 
-            if (postResponse.ok) {
-              results.posts_published++;
-            } else {
-              const error = await postResponse.text();
-              results.errors.push(`Post error for ${account.name}: ${error}`);
-            }
-          } catch (e) {
-            results.errors.push(`Post exception for ${account.name}: ${e}`);
-          }
+      if (currentHour < startHour || currentHour >= endHour) {
+        console.log(`⏭️ Outside posting window - skipping`);
+        results.push({
+          account_id: account.id,
+          action: "skipped",
+          reason: "outside_time_window"
+        });
+        continue;
+      }
+
+      // Check last post time and interval
+      if (setting.last_post_at) {
+        const lastPost = new Date(setting.last_post_at);
+        const minutesSinceLastPost = (now.getTime() - lastPost.getTime()) / 60000;
+        const requiredInterval = setting.post_interval_minutes || 1440; // Default 24h
+
+        console.log(`📅 Minutes since last post: ${minutesSinceLastPost.toFixed(0)}/${requiredInterval}`);
+
+        if (minutesSinceLastPost < requiredInterval) {
+          console.log(`⏭️ Too soon to post again - skipping`);
+          results.push({
+            account_id: account.id,
+            action: "skipped",
+            reason: "interval_not_met"
+          });
+          continue;
         }
       }
 
-      // Run listening scan if enabled
-      if (settings.auto_comment_enabled) {
-        console.log(`Running listening scan for account ${account.name}`);
-        
-        try {
-          const listenResponse = await fetch(`${SUPABASE_URL}/functions/v1/linkedin-listen`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-            },
-            body: JSON.stringify({ account_id: account.id }),
+      // Post!
+      console.log(`✅ Conditions met - attempting to post`);
+
+      try {
+        const postResponse = await fetch(`${SUPABASE_URL}/functions/v1/linkedin-post`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          },
+          body: JSON.stringify({ account_id: account.id })
+        });
+
+        const postResult = await postResponse.json();
+
+        if (postResponse.ok && postResult.success) {
+          console.log(`✅ Post published successfully`);
+          results.push({
+            account_id: account.id,
+            action: "posted",
+            post_id: postResult.post_id,
+            linkedin_post_id: postResult.linkedin_post_id
           });
-
-          if (listenResponse.ok) {
-            const listenData = await listenResponse.json();
-            results.listening_scans++;
-
-            // Auto-comment on high relevance detections
-            if (listenData.detections && settings.auto_comment_enabled) {
-              for (const detection of listenData.detections) {
-                if (detection.relevance_score >= 0.7) {
-                  console.log(`Auto-commenting on detection ${detection.id}`);
-                  
-                  await fetch(`${SUPABASE_URL}/functions/v1/linkedin-comment`, {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-                    },
-                    body: JSON.stringify({ detection_id: detection.id }),
-                  });
-                }
-              }
-            }
-          } else {
-            const error = await listenResponse.text();
-            results.errors.push(`Listen error for ${account.name}: ${error}`);
-          }
-        } catch (e) {
-          results.errors.push(`Listen exception for ${account.name}: ${e}`);
+        } else {
+          console.error(`❌ Post failed:`, postResult.error);
+          results.push({
+            account_id: account.id,
+            action: "failed",
+            error: postResult.error
+          });
         }
+      } catch (postError) {
+        console.error(`❌ Post error:`, postError);
+        results.push({
+          account_id: account.id,
+          action: "error",
+          error: postError instanceof Error ? postError.message : String(postError)
+        });
       }
     }
 
-    console.log("Scheduler completed:", results);
+    console.log(`\n✅ LinkedIn Daily Scheduler - Complete`);
 
-    return new Response(JSON.stringify({ 
+    return new Response(JSON.stringify({
       success: true,
-      timestamp: brasiliaTime.toISOString(),
-      brasilia_hour: currentHour,
-      ...results,
+      checked_accounts: settings.length,
+      results
     }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
+
   } catch (error) {
-    console.error("Scheduler error:", error);
-    return new Response(JSON.stringify({ 
-      error: error instanceof Error ? error.message : "Unknown error" 
+    console.error("Scheduler Error:", error);
+    return new Response(JSON.stringify({
+      success: false,
+      error: error instanceof Error ? error.message : String(error)
     }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 });

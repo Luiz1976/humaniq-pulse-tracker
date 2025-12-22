@@ -78,8 +78,21 @@ serve(async (req) => {
         "https://raw.githubusercontent.com/Luiz1976/humaniq-assets/main/ARTE%2002-1.png",
         "https://raw.githubusercontent.com/Luiz1976/humaniq-assets/main/ARTE%2003-1.png"
       ];
-      const imageUrl = promoImages[(post.image_index || 1) - 1];
-      console.log(`Uploading image: ${imageUrl}`);
+
+      // Garantir que image_index seja válido (1, 2 ou 3)
+      let imageIndex = post.image_index || 1;
+      if (imageIndex < 1 || imageIndex > 3) {
+        imageIndex = 1; // Fallback para primeira imagem
+      }
+
+      const imageUrl = promoImages[imageIndex - 1];
+
+      // Validação extra: verificar se a URL existe
+      if (!imageUrl) {
+        throw new Error(`Invalid image index: ${post.image_index} (normalized to ${imageIndex})`);
+      }
+
+      console.log(`Uploading image ${imageIndex}: ${imageUrl}`);
 
       const imageResponse = await fetch(imageUrl);
       if (!imageResponse.ok) {

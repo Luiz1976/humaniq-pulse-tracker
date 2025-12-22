@@ -7,19 +7,433 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const CONTENT_THEMES = [
-  "Implementação da NR01 e gestão de riscos psicossociais",
-  "Benefícios do mapeamento de saúde mental no trabalho",
-  "Como identificar e prevenir riscos psicossociais",
-  "A importância do bem-estar corporativo na produtividade",
-  "Conformidade com NR01: guia prático para empresas",
-  "Transformação digital na gestão de saúde ocupacional",
-  "Indicadores de saúde mental e clima organizacional",
-  "Cases de sucesso em gestão de riscos psicossociais",
-  "Tendências em saúde ocupacional para 2025",
-  "O papel da liderança na promoção do bem-estar",
-  "Ferramentas digitais para avaliação psicossocial",
-  "Como engajar colaboradores em programas de saúde",
+// LinkedIn Post Templates - Professional B2B Content
+const LINKEDIN_TEMPLATES = [
+  {
+    title: "Implementação da NR01: Por Onde Começar?",
+    content: `🎯 A NR01 trouxe uma mudança fundamental para a segurança do trabalho no Brasil.
+
+Mas por onde começar a implementação dos riscos psicossociais na sua empresa?
+
+📋 Passos essenciais:
+
+1️⃣ Mapeamento inicial - Identifique os fatores de risco
+2️⃣ Avaliação de impacto - Mensure a exposição dos colaboradores  
+3️⃣ Plano de ação - Defina medidas preventivas
+4️⃣ Monitoramento contínuo - Acompanhe a evolução
+
+💡 A HumaniQ AI oferece uma plataforma completa para automatizar todo esse processo, desde o mapeamento até o acompanhamento contínuo.
+
+👉 Conheça nossa solução: www.humaniqai.com.br
+
+#NR01 #RiscosPsicossociais #SegurançaDoTrabalho #SST #HumaniQAI`
+  },
+  {
+    title: "Os 5 Principais Riscos Psicossociais no Ambiente de Trabalho",
+    content: `⚠️ Você conhece os principais riscos psicossociais que afetam sua equipe?
+
+A NR01 exige que as empresas identifiquem e gerenciem esses fatores:
+
+🔴 Sobrecarga de trabalho
+📉 Falta de autonomia
+😰 Assédio moral e pressão excessiva
+⏰ Jornadas extenuantes
+🤝 Falta de suporte social
+
+Consequências ignoradas:
+• Aumento do absenteísmo
+• Queda na produtividade
+• Turnover elevado  
+• Passivos trabalhistas
+
+✅ A HumaniQ AI ajuda sua empresa a mapear, avaliar e controlar esses riscos de forma automatizada e contínua.
+
+Proteja seus colaboradores e sua empresa.
+
+www.humaniqai.com.br
+
+#SaúdeMental #NR01 #GestãoDePessoas #RH #BemEstarCorporativo`
+  },
+  {
+    title: "Transformação Digital na Gestão de SST",
+    content: `🚀 A segurança do trabalho está passando por uma revolução digital.
+
+Você ainda gerencia riscos psicossociais com planilhas e formulários manuais?
+
+📊 A tecnologia permite:
+
+✓ Mapeamento automatizado de riscos
+✓ Análise de dados em tempo real
+✓ Dashboards intuitivos para tomada de decisão
+✓ Alertas preditivos de situações de risco
+✓ Conformidade garantida com a NR01
+
+O futuro da SST é data-driven e preventivo.
+
+A HumaniQ AI une inteligência artificial e expertise em saúde ocupacional para revolucionar sua gestão de riscos psicossociais.
+
+Agende uma demo: www.humaniqai.com.br
+
+#TransformaçãoDigital #SST #Inovação #TechRH #NR01`
+  },
+  {
+    title: "Case de Sucesso: Redução de 40% no Absenteísmo",
+    content: `📈 Resultados reais de empresas que investiram na gestão de riscos psicossociais:
+
+Uma empresa do setor de serviços implementou nossa solução e em 6 meses:
+
+✅ 40% de redução no absenteísmo
+✅ 35% de aumento na satisfação dos colaboradores
+✅ 28% de melhora nos indicadores de clima organizacional
+✅ 100% de conformidade com a NR01
+
+Como conseguiram?
+
+1. Mapeamento completo dos fatores de risco
+2. Planos de ação personalizados por área
+3. Monitoramento contínuo e preventivo
+4. Engajamento da liderança
+
+Quer alcançar resultados semelhantes?
+
+A HumaniQ AI pode ajudar sua empresa nessa transformação.
+
+👉 www.humaniqai.com.br
+
+#CaseDeSucesso #RH #GestãoDePessoas #Resultados #NR01`
+  },
+  {
+    title: "Compliance com NR01: Evite Multas e Passivos",
+    content: `⚖️ Sua empresa está em conformidade com a NR01?
+
+Desde 2022, a avaliação de riscos psicossociais é OBRIGATÓRIA.
+
+Não cumprir pode resultar em:
+• Multas de até R$ 50 mil
+• Interdições e embargos
+• Ações trabalhistas
+• Danos à reputação
+
+⚠️ Muitas empresas ainda não sabem como fazer essa avaliação corretamente.
+
+A boa notícia? É mais simples do que parece.
+
+Com a plataforma certa, você:
+✓ Automatiza todo o processo
+✓ Garante conformidade total
+✓ Protege seus colaboradores
+✓ Evita passivos trabalhistas
+
+A HumaniQ AI oferece uma solução completa e eficiente.
+
+Não deixe para depois. A fiscalização está aumentando.
+
+www.humaniqai.com.br
+
+#Compliance #NR01 #Legislação #SST #RH`
+  },
+  {
+    title: "O Que a Liderança Precisa Saber Sobre Riscos Psicossociais",
+    content: `👔 Mensagem para gestores e líderes:
+
+Os riscos psicossociais não são apenas uma questão de RH ou SST.
+São um desafio estratégico de negócio.
+
+Por quê?
+
+📊 Impactam diretamente:
+• Produtividade da equipe
+• Qualidade das entregas
+• Retenção de talentos
+• Clima organizacional
+• Resultados financeiros
+
+Como líder, você precisa:
+
+1️⃣ Compreender os fatores de risco na sua área
+2️⃣ Identificar sinais de alerta precocemente
+3️⃣ Criar um ambiente saudável e produtivo
+4️⃣ Dar o exemplo em práticas de bem-estar
+
+A HumaniQ AI fornece as ferramentas e insights que você precisa para liderar com dados e empatia.
+
+Seja um líder transformador.
+
+www.humaniqai.com.br
+
+#Liderança #GestãoDePessoas #BemEstar #NR01 #RH`
+  },
+  {
+    title: "Mapeamento de Riscos: Por Que É Tão Importante?",
+    content: `🗺️ Você não consegue gerenciar o que não consegue medir.
+
+Essa máxima é especialmente verdadeira para riscos psicossociais.
+
+O mapeamento permite:
+
+🔍 Identificar problemas antes que se tornem crises
+📈 Priorizar ações com base em dados
+💰 Otimizar investimentos em bem-estar
+⚖️ Demonstrar conformidade legal
+👥 Proteger a saúde dos colaboradores
+
+Sem mapeamento, você está:
+❌ Agindo no escuro
+❌ Desperdiçando recursos
+❌ Assumindo riscos desnecessários
+❌ Expondo a empresa a passivos
+
+A HumaniQ AI torna o mapeamento simples, rápido e eficaz.
+
+Tecnologia + expertise = resultados concretos.
+
+Faça um teste gratuito: www.humaniqai.com.br
+
+#Mapeamento #Gestão #NR01 #SST #RH`
+  },
+  {
+    title: "Saúde Mental no Trabalho: Um Tema Estratégico",
+    content: `🧠 Saúde mental deixou de ser tabu e virou prioridade estratégica.
+
+Dados alarmantes:
+• 1 em cada 5 trabalhadores sofre de ansiedade ou depressão
+• Burnout cresceu 48% nos últimos 2 anos
+• Custo anual com afastamentos: bilhões de reais
+
+As empresas líderes já entenderam:
+Investir em saúde mental é investir em:
+✓ Produtividade
+✓ Engajamento
+✓ Retenção
+✓ Inovação
+✓ Sustentabilidade do negócio
+
+E você? Já mapeou os riscos psicossociais na sua organização?
+
+A NR01 exige. A saúde dos colaboradores merece. O negócio precisa.
+
+A HumaniQ AI tem a solução que você procura.
+
+👉 www.humaniqai.com.br
+
+#SaúdeMental #Burnout #NR01 #RH #BemEstar`
+  },
+  {
+    title: "Indicadores de Clima: O Termômetro da Organização",
+    content: `🌡️ Como está o clima na sua empresa?
+
+Criar indicadores de clima organizacional é essencial para:
+
+📊 Monitorar a saúde do ambiente de trabalho
+🚨 Detectar problemas antes que escalem
+📈 Acompanhar evolução de ações implementadas
+💼 Tomar decisões baseadas em dados
+
+Principais indicadores:
+• Taxa de absenteísmo
+• Índice de turnover
+• Pesquisas de satisfação (eNPS)
+• Avaliação de riscos psicossociais
+• Produtividade por equipe
+
+Com a HumaniQ AI, você tem dashboards completos e atualizados em tempo real.
+
+Transforme dados em insights. Insights em ações. Ações em resultados.
+
+Conheça: www.humaniqai.com.br
+
+#Indicadores #ClimaCorporativo #Gestão #NR01 #DataDriven`
+  },
+  {
+    title: "Prevenção vs Remediação: Onde Investir?",
+    content: `💡 Uma pergunta crucial para gestores:
+
+Vale mais a pena prevenir ou remediar problemas de saúde ocupacional?
+
+A resposta é clara: PREVENIR.
+
+Comparação de custos:
+
+🔴 Remediação:
+• Afastamentos médicos
+• Processos trabalhistas
+• Perda de produtividade
+• Danos à reputação
+• Custo: até 10x mais caro
+
+🟢 Prevenção:
+• Mapeamento de riscos
+• Ações antecipatórias
+• Engajamento proativo
+• Compliance garantido
+• ROI positivo em meses
+
+A escolha é óbvia. Mas muitas empresas ainda reagem ao invés de prevenir.
+
+A HumaniQ AI te ajuda a mudar essa realidade com tecnologia e inteligência.
+
+Seja preventivo. Seja estratégico.
+
+www.humaniqai.com.br
+
+#Prevenção #SST #NR01 #Gestão #ROI`
+  },
+  {
+    title: "Engajamento: A Chave Para Programas de Sucesso",
+    content: `🎯 98% dos programas de bem-estar corporativo falham.
+
+Por quê? Falta de engajamento.
+
+Não basta ter ferramentas. É preciso que as pessoas usem.
+
+Como engajar colaboradores:
+
+1️⃣ Comunicação clara sobre benefícios
+2️⃣ Processos simples e acessíveis
+3️⃣ Tecnologia intuitiva (mobile-first)
+4️⃣ Feedback contínuo e visível
+5️⃣ Liderança dando o exemplo
+
+A HumaniQ AI foi desenvolvida pensando em UX:
+✓ Interface amigável
+✓ Acesso mobile
+✓ Notificações inteligentes
+✓ Gamificação
+✓ Resultados visíveis
+
+Transforme dados em engajamento real.
+
+👉 www.humaniqai.com.br
+
+#Engajamento #BemEstar #RH #UX #NR01`
+  },
+  {
+    title: "Tendências em SST Para 2026",
+    content: `🔮 O futuro da segurança do trabalho já começou.
+
+Principais tendências para 2026:
+
+🤖 IA e Machine Learning
+Previsão de riscos antes que aconteçam
+
+📱 Monitoramento Mobile
+Dados em tempo real, onde quer que esteja
+
+🧠 Foco em Saúde Mental
+Riscos psicossociais no centro da estratégia
+
+📊 Analytics Avançado
+Dashboards preditivos e prescritivos
+
+🌐 Trabalho Híbrido
+Novos desafios, novas soluções
+
+⚖️ Compliance Automatizado
+Menos burocracia, mais eficiência
+
+Sua empresa está preparada?
+
+A HumaniQ AI já incorpora todas essas tendências em uma única plataforma.
+
+Seja pioneiro, não reativo.
+
+www.humaniqai.com.br
+
+#Tendências #Inovação #SST #Futuro #NR01`
+  },
+  {
+    title: "ROI em Programas de Bem-Estar: É Possível Medir?",
+    content: `💰 "Quanto custa?" vs "Qual o retorno?"
+
+Investir em gestão de riscos psicossociais tem ROI mensurável:
+
+📈 Retornos típicos:
+• 3:1 até 6:1 em redução de custos
+• -30% absenteísmo
+• -25% turnover
+• +20% produtividade
+• +35% satisfação
+
+Mas como medir?
+
+KPIs essenciais:
+✓ Taxa de absenteísmo (antes/depois)
+✓ Custo de substituição de funcionários
+✓ Produtividade por equipe
+✓ Redução de processos trabalhistas
+✓ Melhora no eNPS
+
+A HumaniQ AI fornece relatórios automáticos de ROI, facilitando a justificativa de investimentos.
+
+Gestão baseada em dados. Decisões baseadas em resultados.
+
+👉 www.humaniqai.com.br
+
+#ROI #Resultados #Gestão #NR01 #BemEstar`
+  },
+  {
+    title: "NR01: O Que Mudou e O Que Você Precisa Fazer",
+    content: `📋 Atualização importante sobre a NR01:
+
+O que mudou desde 2022?
+
+🆕 Novo requisito: Gestão de riscos psicossociais
+📊 Obrigatórias: Avaliações periódicas
+📝 Documentação: PGR deve incluir fatores psicossociais
+⚖️ Fiscalização: Está mais rigorosa
+
+O que sua empresa DEVE fazer:
+
+1️⃣ Mapear riscos psicossociais
+2️⃣ Avaliar níveis de exposição
+3️⃣ Implementar medidas de controle
+4️⃣ Monitorar resultados
+5️⃣ Documentar tudo
+
+Prazo? AGORA. A conformidade é retroativa.
+
+Não sabe por onde começar?
+
+A HumaniQ AI simplifica todo o processo:
+• Mapeamento automatizado
+• Relatórios em conformidade
+• Monitoramento contínuo
+• Suporte especializado
+
+Evite problemas. Proteja sua empresa.
+
+www.humaniqai.com.br
+
+#NR01 #Compliance #Legislação #SST #Segurança`
+  },
+  {
+    title: "Teste Gratuito: Conheça a Plataforma HumaniQ AI",
+    content: `🎁 Que tal conhecer uma solução completa para gestão de riscos psicossociais?
+
+A HumaniQ AI oferece teste gratuito da plataforma!
+
+O que você vai testar:
+
+✅ Mapeamento automatizado de riscos
+✅ Dashboards em tempo real
+✅ Relatórios de conformidade NR01
+✅ Planos de ação personalizados
+✅ Análises preditivas
+
+Perfeito para:
+• Gestores de RH
+• Profissionais de SST
+• Líderes de equipe
+• Executivos C-level
+
+Sem compromisso. Sem cartão de crédito. Apenas 7 dias para conhecer a solução que está transformando a gestão de saúde ocupacional no Brasil.
+
+👉 Solicite seu acesso: www.humaniqai.com.br
+
+Experimente antes de decidir.
+
+#TesteGrátis #Demo #NR01 #SST #RH`
+  }
 ];
 
 serve(async (req) => {
@@ -32,32 +446,22 @@ serve(async (req) => {
   if (req.method === "GET") {
     return new Response(JSON.stringify({
       status: "online",
+      mode: "template-based",
+      templates_count: LINKEDIN_TEMPLATES.length,
       time: new Date().toISOString(),
-      keys_configured: {
-        has_gemini: !!Deno.env.get("GEMINI_API_KEY"),
-        has_supabase: !!(Deno.env.get("SUPABASE_URL") ?? Deno.env.get("CUSTOM_SUPABASE_URL"))
-      }
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 
   try {
-    // Load multiple API keys for rotation
-    const GEMINI_API_KEYS: string[] = [];
-    for (let i = 1; i <= 10; i++) {
-      const key = Deno.env.get(`GEMINI_API_KEY_${i}`) || (i === 1 ? Deno.env.get("GEMINI_API_KEY") : null);
-      if (key) GEMINI_API_KEYS.push(key);
-    }
-
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? Deno.env.get("CUSTOM_SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("CUSTOM_SERVICE_ROLE_KEY");
 
-    if (GEMINI_API_KEYS.length === 0) throw new Error("No Gemini API keys configured. Set GEMINI_API_KEY or GEMINI_API_KEY_1, GEMINI_API_KEY_2, etc.");
     if (!SUPABASE_URL) throw new Error("SUPABASE_URL not configured");
     if (!SUPABASE_SERVICE_ROLE_KEY) throw new Error("SUPABASE_SERVICE_ROLE_KEY not configured");
 
-    console.log(`✅ Loaded ${GEMINI_API_KEYS.length} Gemini API key(s) for rotation`);
+    console.log(`✅ Using template-based generation (${LINKEDIN_TEMPLATES.length} templates available)`);
 
     const reqBody = await req.json().catch(err => {
       throw new Error(`Failed to parse request body JSON: ${err.message}`);
@@ -71,7 +475,7 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Get existing posts
+    // Get existing posts to avoid duplicates
     const { data: existingPosts } = await supabase
       .from("linkedin_posts")
       .select("title")
@@ -80,119 +484,40 @@ serve(async (req) => {
     const existingTitles = existingPosts?.map(p => p.title) || [];
 
     const generatedPosts = [];
-    let currentKeyIndex = 0;
 
-    // Helper function to call Gemini with retry logic
-    async function callGeminiWithRetry(prompt: string, maxRetries = GEMINI_API_KEYS.length): Promise<any> {
-      let lastError: Error | null = null;
+    // Filter out already used templates to ensure unique posts
+    const availableTemplates = LINKEDIN_TEMPLATES.filter(
+      template => !existingTitles.includes(template.title)
+    );
 
-      for (let attempt = 0; attempt < maxRetries; attempt++) {
-        const apiKey = GEMINI_API_KEYS[currentKeyIndex];
-        const keyLabel = GEMINI_API_KEYS.length > 1 ? `Key ${currentKeyIndex + 1}/${GEMINI_API_KEYS.length}` : "Key";
-
-        console.log(`🔑 Attempting with ${keyLabel} (Attempt ${attempt + 1}/${maxRetries})`);
-
-        try {
-          const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey.trim()}`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-              }),
-            }
-          );
-
-          if (response.ok) {
-            console.log(`✅ Success with ${keyLabel}`);
-            return await response.json();
-          }
-
-          const errorText = await response.text();
-
-          // Check if it's a quota error (429)
-          if (response.status === 429) {
-            console.warn(`⚠️ Quota exceeded for ${keyLabel}, trying next key...`);
-            currentKeyIndex = (currentKeyIndex + 1) % GEMINI_API_KEYS.length;
-            lastError = new Error(`Quota exceeded: ${errorText}`);
-            continue;
-          }
-
-          // For other errors, throw immediately
-          throw new Error(`Gemini API returned error ${response.status}: ${errorText}`);
-        } catch (error) {
-          if (error instanceof Error && error.message.includes("Quota exceeded")) {
-            lastError = error;
-            continue;
-          }
-          throw error;
-        }
-      }
-
-      // All keys failed
-      throw lastError || new Error("All API keys exhausted");
+    if (availableTemplates.length === 0) {
+      throw new Error("Todos os templates já foram usados. Delete alguns posts existentes para liberar novos templates.");
     }
 
     for (let i = 0; i < count; i++) {
-      const theme = CONTENT_THEMES[Math.floor(Math.random() * CONTENT_THEMES.length)];
+      if (availableTemplates.length === 0) {
+        console.warn(`Only ${i} posts generated - ran out of unique templates`);
+        break;
+      }
+
+      // Select random template from available ones
+      const randomIndex = Math.floor(Math.random() * availableTemplates.length);
+      const template = availableTemplates[randomIndex];
+
+      // Remove selected template to prevent duplicates
+      availableTemplates.splice(randomIndex, 1);
+
       const imageIndex = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
 
-      console.log(`\n📝 Generating post ${i + 1}/${count} - Theme: "${theme}"`);
-
-      const prompt = `Você é um especialista em marketing de conteúdo B2B para LinkedIn, especializado em saúde ocupacional e conformidade com NR01.
-        
-        Crie uma postagem profissional para LinkedIn sobre o tema: "${theme}"
-        
-        A postagem deve:
-        1. Ter um gancho inicial impactante
-        2. Apresentar dados ou insights relevantes
-        3. Mencionar a HumaniQ AI como solução inovadora para mapeamento de riscos psicossociais
-        4. Incluir um call-to-action sutil para conhecer www.humaniqai.com.br
-        5. Usar emojis de forma moderada e profissional
-        6. Ter entre 150-250 palavras
-        7. Incluir 3-5 hashtags relevantes no final
-        
-        Evite estes títulos que já foram usados: ${existingTitles.join(", ")}
-        
-        Responda EXCLUSIVAMENTE com um JSON válido do seguinte formato (SEM MARKDOWN, APENAS O JSON, IMPORTANTE):
-        {
-          "title": "título curto para identificação interna",
-          "content": "texto completo da postagem"
-        }`;
-
-      // Add delay to respect rate limits (4 seconds between posts)
-      if (i > 0) await new Promise(r => setTimeout(r, 4000));
-
-      // Call Gemini with automatic retry/rotation
-      const data = await callGeminiWithRetry(prompt);
-
-      // Rotate to next key for next request (round-robin)
-      currentKeyIndex = (currentKeyIndex + 1) % GEMINI_API_KEYS.length;
-
-      const rawContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!rawContent) {
-        console.error("Gemini Empty Response:", JSON.stringify(data));
-        throw new Error(`Gemini returned empty content. Response: ${JSON.stringify(data)}`);
-      }
-
-      let postData;
-      try {
-        const cleanJson = rawContent.replace(/```json\n?|\n?```/g, "").trim();
-        postData = JSON.parse(cleanJson);
-      } catch (e) {
-        console.error("Failed to parse JSON:", rawContent);
-        postData = { title: `Post sobre ${theme}`, content: rawContent };
-      }
+      console.log(`📝 Generating post ${i + 1}/${count} - Template: "${template.title}"`);
 
       // Save to database
       const { data: newPost, error } = await supabase
         .from("linkedin_posts")
         .insert({
           account_id,
-          title: postData.title,
-          content: postData.content,
+          title: template.title,
+          content: template.content,
           image_index: imageIndex,
           status: "ready",
         })
@@ -202,14 +527,14 @@ serve(async (req) => {
       if (error) throw error;
 
       generatedPosts.push(newPost);
-      existingTitles.push(postData.title);
+      existingTitles.push(template.title);
 
       await supabase.from("linkedin_activity_logs").insert({
         account_id,
         log_type: "success",
         action: "generate",
-        message: `Post gerado: "${postData.title}"`,
-        details: { post_id: newPost.id },
+        message: `Post gerado: "${template.title}"`,
+        details: { post_id: newPost.id, method: "template" },
       });
     }
 
@@ -217,15 +542,15 @@ serve(async (req) => {
       success: true,
       posts: generatedPosts,
       count: generatedPosts.length,
+      method: "template-based",
     }), {
-      status: 200, // Explicit 200
+      status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
   } catch (error) {
     console.error("Handler Error:", error);
 
-    // Ensure error message is always a string
     let errorMessage: string;
     if (error instanceof Error) {
       errorMessage = error.message;
@@ -235,16 +560,14 @@ serve(async (req) => {
       errorMessage = String(error);
     }
 
-    // Ensure stack trace is a string
     const stackTrace = error instanceof Error && error.stack ? String(error.stack) : undefined;
 
-    // RETURN 200 WITH ERROR FIELD -> Allows frontend to read the message!
     return new Response(JSON.stringify({
       success: false,
       error: errorMessage,
       details: stackTrace
     }), {
-      status: 200, // IMPORTANT: Sending 200 to bypass client side exceptions
+      status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

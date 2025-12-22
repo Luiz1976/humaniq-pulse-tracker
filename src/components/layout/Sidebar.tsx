@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { 
-  LayoutDashboard, 
+import {
+  LayoutDashboard,
   Linkedin,
-  Radio, 
-  MessageSquare, 
-  Settings, 
+  Radio,
+  MessageSquare,
+  Settings,
   Activity,
   ChevronLeft,
-  Zap
+  Zap,
+  FileText
 } from "lucide-react";
 
 interface SidebarProps {
@@ -18,6 +19,7 @@ interface SidebarProps {
 
 const menuItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "blog", label: "Blog", icon: FileText },
   { id: "linkedin", label: "LinkedIn", icon: Linkedin },
   { id: "listener", label: "Escuta Ativa", icon: Radio },
   { id: "templates", label: "Templates", icon: MessageSquare },
@@ -29,7 +31,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <aside 
+    <aside
       className={cn(
         "h-screen bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300",
         collapsed ? "w-20" : "w-64"

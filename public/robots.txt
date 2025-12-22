@@ -1,14 +1,27 @@
-User-agent: Googlebot
+User-agent: *
 Allow: /
 
-User-agent: Bingbot
+# Sitemap
+Sitemap: https://humaniqai.com.br/sitemap.xml
+
+# Bloquear áreas administrativas e APIs
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_/
+
+# Permitir bots de redes sociais
+User-agent: facebookexternalhit
 Allow: /
 
 User-agent: Twitterbot
 Allow: /
 
-User-agent: facebookexternalhit
+User-agent: LinkedInBot
 Allow: /
 
-User-agent: *
-Allow: /
+# Crawl-delay para bots mais agressivos
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: AhrefsBot
+Crawl-delay: 10

@@ -258,13 +258,19 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Handle navigation for blog tab
+  useEffect(() => {
+    if (activeTab === "blog") {
+      navigate("/website-content");
+    }
+  }, [activeTab, navigate]);
+
   const renderView = () => {
     switch (activeTab) {
       case "dashboard":
         return <DashboardView />;
       case "blog":
-        navigate("/website-content");
-        return null;
+        return null; // Navigation handled in useEffect
       case "linkedin":
         return <LinkedInView />;
       case "listener":
