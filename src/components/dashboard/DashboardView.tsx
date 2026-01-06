@@ -43,8 +43,8 @@ export function DashboardView() {
     <div className="space-y-8">
       {/* Header */}
       <div className="animate-fade-in">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">Visão geral da automação HumaniQ Pulse</p>
+        <h1 className="text-3xl font-bold">Software NR 01 Completo com Inteligência Artificial</h1>
+        <p className="text-muted-foreground mt-1">Sistema especializado em NR 01 e gestão de riscos psicossociais</p>
       </div>
 
       {/* Stats Grid */}

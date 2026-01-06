@@ -46,24 +46,24 @@ const App = () => (
                 <Route path="/nr01" element={
                   <PillarPage
                     route="nr01"
-                    title="NR-01 e Gerenciamento de Riscos"
-                    description="Guia completo sobre a Norma Regulamentadora 01 e o GRO (Gerenciamento de Riscos Ocupacionais)."
+                    title="NR 01 2024: Guia Completo e Software para Implementação"
+                    description="Implemente a NR 01 com nosso software especializado. Evite multas, gerencie requisitos e garanta conformidade trabalhista. Solicite demonstração!"
                     icon="shield"
                   />
                 } />
                 <Route path="/riscos-psicossociais" element={
                   <PillarPage
                     route="riscos-psicossociais"
-                    title="Riscos Psicossociais"
-                    description="Gestão de Saúde Mental no Trabalho, conformidade legal e prevenção de burnout."
+                    title="Riscos Psicossociais no Trabalho: Identificação e Gestão"
+                    description="Mapeie, avalie e gerencie riscos psicossociais na sua empresa. Software completo com metodologia validada. Previna burnout e aumente produtividade."
                     icon="activity"
                   />
                 } />
                 <Route path="/software-nr01" element={
                   <PillarPage
                     route="software-nr01"
-                    title="Software para NR-01"
-                    description="Tecnologia para automatizar o PGR e o mapeamento de riscos psicossociais."
+                    title="Software NR 01 | Sistema para Gestão da Norma Regulamentadora 1"
+                    description="Automatize a gestão da NR 01 com nosso software. Controle documentos, prazos, treinamentos e evite multas trabalhistas. Teste grátis!"
                     icon="book"
                   />
                 } />

@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { MetaTags } from "@/components/seo/MetaTags";
+import { SchemaMarkup } from "@/components/seo/SchemaMarkup";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, ShieldCheck, Activity } from "lucide-react";
+import { ArrowRight, BookOpen, ShieldCheck, Activity, CheckCircle2 } from "lucide-react";
 
 interface PillarPageProps {
     route: string;
@@ -44,6 +45,81 @@ export default function PillarPage({ route, title, description, icon = 'book' }:
 
     const Icon = icon === 'shield' ? ShieldCheck : icon === 'activity' ? Activity : BookOpen;
 
+    const renderCustomContent = () => {
+        if (route === 'nr01') {
+            return (
+                <div className="space-y-12 mb-16">
+                    <section className="space-y-4">
+                        <h2 className="text-3xl font-bold">O que é a NR 01 e Sua Importância</h2>
+                        <p className="text-lg text-muted-foreground">
+                            A Norma Regulamentadora nº 01 (NR 01) é a base de todas as normas de segurança do trabalho no Brasil.
+                            Ela estabelece as disposições gerais e o Gerenciamento de Riscos Ocupacionais (GRO).
+                        </p>
+                    </section>
+
+                    <section className="space-y-4">
+                        <h2 className="text-3xl font-bold">Principais Mudanças na NR 01 2024</h2>
+                        <ul className="space-y-2">
+                            <li className="flex items-start gap-2">
+                                <CheckCircle2 className="w-5 h-5 text-primary mt-1" />
+                                <span>Fim do PPRA e obrigatoriedade do PGR (Programa de Gerenciamento de Riscos).</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <CheckCircle2 className="w-5 h-5 text-primary mt-1" />
+                                <span>Inclusão dos riscos psicossociais nas avaliações de risco.</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <CheckCircle2 className="w-5 h-5 text-primary mt-1" />
+                                <span>Digitalização obrigatória de documentos de SST.</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section className="space-y-4">
+                        <h2 className="text-3xl font-bold">Como Implementar a NR 01 na Sua Empresa</h2>
+                        <p className="text-lg text-muted-foreground">
+                            A implementação exige um ciclo PDCA (Plan, Do, Check, Act). Comece pelo inventário de riscos,
+                            elabore o plano de ação e realize o acompanhamento contínuo.
+                        </p>
+                    </section>
+
+                    <section className="bg-primary/5 p-8 rounded-2xl border border-primary/20">
+                        <h2 className="text-3xl font-bold mb-4">Software Humaniq AI para NR 01</h2>
+                        <p className="text-lg mb-6">
+                            Simplifique a conformidade com a NR 01 usando nossa inteligência artificial.
+                            Automatize o inventário de riscos, planos de ação e gestão documental.
+                        </p>
+                        <Button size="lg" className="w-full sm:w-auto">Solicitar Demonstração</Button>
+                    </section>
+                </div>
+            );
+        }
+
+        if (route === 'riscos-psicossociais') {
+            return (
+                <div className="space-y-12 mb-16">
+                    <section className="space-y-4">
+                        <h2 className="text-3xl font-bold">Identificação e Avaliação</h2>
+                        <p className="text-lg text-muted-foreground">
+                            Riscos psicossociais envolvem fatores como estresse, assédio, sobrecarga mental e falta de autonomia.
+                            Sua identificação é agora obrigatória sob a nova NR 01.
+                        </p>
+                    </section>
+
+                    <section className="space-y-4">
+                        <h2 className="text-3xl font-bold">Metodologia de Gestão</h2>
+                        <p className="text-lg text-muted-foreground">
+                            Utilizamos metodologias validadas internacionalmente (como COPSOQ II) integradas à nossa plataforma
+                            para mapear e mitigar ameaças à saúde mental dos colaboradores.
+                        </p>
+                    </section>
+                </div>
+            );
+        }
+
+        return null;
+    };
+
     return (
         <div className="min-h-screen bg-background">
             <MetaTags title={title} description={description} />
@@ -55,13 +131,18 @@ export default function PillarPage({ route, title, description, icon = 'book' }:
                     <div className="w-16 h-16 mx-auto bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
                         <Icon className="w-8 h-8 text-primary" />
                     </div>
+                    {/* H1 Optimization for SEO */}
                     <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-6">{title}</h1>
                     <p className="text-xl text-muted-foreground max-w-2xl mx-auto">{description}</p>
                 </div>
             </header>
 
-            {/* Content List */}
+            {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+                {/* Custom Content for SEO Pillars */}
+                {renderCustomContent()}
+
                 <div className="flex justify-between items-center mb-8">
                     <h2 className="text-2xl font-bold">Artigos e Guias Recentes</h2>
                     <Link to="/blog">
@@ -133,6 +214,28 @@ export default function PillarPage({ route, title, description, icon = 'book' }:
                     </div>
                 </div>
             </section>
-        </div>
+
+            <SchemaMarkup
+                type="TechArticle"
+                data={{
+                    "headline": title,
+                    "description": description,
+                    "author": {
+                        "@type": "Organization",
+                        "name": "HumaniQ AI"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "HumaniQ Pulse",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": `${window.location.origin}/logo.png`
+                        }
+                    },
+                    "datePublished": new Date().toISOString(),
+                    "dateModified": new Date().toISOString()
+                }}
+            />
+        </div >
     );
 }

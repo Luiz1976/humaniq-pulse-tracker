@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { SchemaMarkup } from "@/components/seo/SchemaMarkup";
+import { MetaTags } from "@/components/seo/MetaTags";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { DashboardView } from "@/components/dashboard/DashboardView";
@@ -299,6 +301,19 @@ const Index = () => {
       <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
+          <MetaTags
+            title="Humaniq AI"
+            description="Sistema especializado em NR 01, gestão de riscos psicossociais e conformidade trabalhista. Software completo com IA para sua empresa."
+          />
+          <SchemaMarkup
+            type="Organization"
+            data={{
+              "name": "HumaniQ Pulse",
+              "url": window.location.origin,
+              "logo": `${window.location.origin}/logo.png`,
+              "description": "Automação inteligente para redes sociais e gestão de riscos psicossociais."
+            }}
+          />
           {renderView()}
         </div>
       </main>
