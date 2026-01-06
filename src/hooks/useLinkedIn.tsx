@@ -495,6 +495,51 @@ export function useLinkedIn() {
     }
   }, [toast]);
 
+  // Reuse post (move back to portfolio)
+  const reusePost = useCallback(async (postId: string) => {
+    try {
+      const { error } = await supabase
+        .from("linkedin_posts")
+        .update({
+          status: "ready",
+          published_at: null,
+          engagement_likes: null,
+          engagement_comments: null,
+          engagement_shares: null
+        })
+        .eq("id", postId);
+
+      if (error) throw error;
+
+      setPosts((prev) =>
+        prev.map(p =>
+          p.id === postId
+            ? {
+              ...p,
+              status: "ready",
+              published_at: null,
+              engagement_likes: null,
+              engagement_comments: null,
+              engagement_shares: null
+            }
+            : p
+        )
+      );
+
+      toast({
+        title: "Post reutilizado",
+        description: "O post foi movido para o portfólio",
+      });
+    } catch (error) {
+      console.error("Reuse post error:", error);
+      toast({
+        title: "Erro",
+        description: "Falha ao reutilizar post",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
   // Disconnect account
   const disconnectAccount = useCallback(async () => {
     if (!account?.id) return;
@@ -546,6 +591,7 @@ export function useLinkedIn() {
     commentOnDetection,
     updateSettings,
     deletePost,
+    reusePost,
     disconnectAccount,
     refreshData: async () => {
       if (account?.id) {

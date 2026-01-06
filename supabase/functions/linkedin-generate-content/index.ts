@@ -486,18 +486,20 @@ serve(async (req) => {
     const generatedPosts = [];
 
     // Filter out already used templates to ensure unique posts
-    const availableTemplates = LINKEDIN_TEMPLATES.filter(
+    let availableTemplates = LINKEDIN_TEMPLATES.filter(
       template => !existingTitles.includes(template.title)
     );
 
+    // If all templates are used, recycle them to remove limitations
     if (availableTemplates.length === 0) {
-      throw new Error("Todos os templates já foram usados. Delete alguns posts existentes para liberar novos templates.");
+      console.log("All templates used. Recycling templates to continue generating content.");
+      availableTemplates = [...LINKEDIN_TEMPLATES];
     }
 
     for (let i = 0; i < count; i++) {
       if (availableTemplates.length === 0) {
-        console.warn(`Only ${i} posts generated - ran out of unique templates`);
-        break;
+        // Refill templates if we run out during a batch generation
+        availableTemplates = [...LINKEDIN_TEMPLATES];
       }
 
       // Select random template from available ones

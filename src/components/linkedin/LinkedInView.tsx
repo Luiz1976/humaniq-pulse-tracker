@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,6 +53,7 @@ export function LinkedInView() {
     runListeningScan,
     commentOnDetection,
     deletePost,
+    reusePost,
     disconnectAccount,
     refreshData,
   } = useLinkedIn();
@@ -59,11 +61,12 @@ export function LinkedInView() {
   const [generating, setGenerating] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const [currentTab, setCurrentTab] = useState("portfolio");
+  const [validating, setValidating] = useState(false);
 
   const handleGenerate = async () => {
     setGenerating(true);
-    const toGenerate = Math.max(1, 10 - readyPosts.length);
-    await generatePosts(toGenerate);
+    await generatePosts(5);
     setGenerating(false);
   };
 
@@ -141,7 +144,7 @@ export function LinkedInView() {
             </div>
             <Progress value={portfolioProgress} className="mt-3 h-2" />
             <p className="text-xs text-muted-foreground mt-1">
-              {readyPosts.length}/10 no portfólio
+              {readyPosts.length} posts no portfólio
             </p>
           </CardContent>
         </Card>
@@ -203,7 +206,7 @@ export function LinkedInView() {
           ) : (
             <Plus className="w-4 h-4" />
           )}
-          Gerar Conteúdo ({10 - readyPosts.length} faltando)
+          Gerar Novo Conteúdo
         </Button>
 
         <Button
@@ -244,7 +247,7 @@ export function LinkedInView() {
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs defaultValue="portfolio" className="space-y-6">
+      <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
         <TabsList className="bg-secondary">
           <TabsTrigger value="portfolio" className="gap-2">
             <ImageIcon className="w-4 h-4" />
@@ -301,10 +304,37 @@ export function LinkedInView() {
         <TabsContent value="published">
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-success" />
-                Posts Publicados
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-success" />
+                  Posts Publicados
+                </CardTitle>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  type="button"
+                  disabled={validating}
+                  onClick={async () => {
+                    console.log("Iniciando revalidação...");
+                    setValidating(true);
+                    try {
+                      await refreshData();
+                      console.log("Dados atualizados com sucesso.");
+                    } catch (err) {
+                      console.error("Erro na revalidação:", err);
+                    } finally {
+                      setValidating(false);
+                      console.log("Mudando para a aba portfólio...");
+                      setCurrentTab("portfolio");
+                    }
+                  }}
+                  className="gap-2"
+                >
+                  <RefreshCw className={`w-4 h-4 ${validating ? "animate-spin" : ""}`} />
+                  {validating ? "Revalidando..." : "Revalidar"}
+                </Button>
+
+              </div>
               <CardDescription>
                 Histórico de publicações e métricas de engajamento
               </CardDescription>
@@ -326,6 +356,7 @@ export function LinkedInView() {
                         post={post}
                         image={images[(post.image_index || 1) - 1]}
                         isPublished
+                        onReuse={() => reusePost(post.id)}
                       />
                     ))}
                   </div>

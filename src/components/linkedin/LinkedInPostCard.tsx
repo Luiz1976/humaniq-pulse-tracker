@@ -2,17 +2,18 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Send, 
-  Trash2, 
-  Eye, 
-  Clock, 
+import {
+  Send,
+  Trash2,
+  Eye,
+  Clock,
   CheckCircle2,
   ThumbsUp,
   MessageSquare,
   Share2,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Recycle
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -36,6 +37,7 @@ interface LinkedInPostCardProps {
   isPublished?: boolean;
   onPublish?: () => void;
   onDelete?: () => void;
+  onReuse?: () => void;
 }
 
 export function LinkedInPostCard({
@@ -44,6 +46,7 @@ export function LinkedInPostCard({
   isPublished = false,
   onPublish,
   onDelete,
+  onReuse,
 }: LinkedInPostCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -55,8 +58,8 @@ export function LinkedInPostCard({
     setPublishing(false);
   };
 
-  const truncatedContent = post.content.length > 200 
-    ? post.content.slice(0, 200) + "..." 
+  const truncatedContent = post.content.length > 200
+    ? post.content.slice(0, 200) + "..."
     : post.content;
 
   return (
@@ -64,10 +67,11 @@ export function LinkedInPostCard({
       <div className="flex">
         {/* Image Preview */}
         <div className="w-32 h-32 flex-shrink-0 bg-secondary">
-          <img 
-            src={image} 
-            alt="Post preview" 
+          <img
+            src={image}
+            alt="Post preview"
             className="w-full h-full object-cover"
+            loading="lazy"
           />
         </div>
 
@@ -76,7 +80,7 @@ export function LinkedInPostCard({
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
-                <Badge 
+                <Badge
                   variant={isPublished ? "default" : "secondary"}
                   className={isPublished ? "bg-success" : ""}
                 >
@@ -101,7 +105,7 @@ export function LinkedInPostCard({
               </div>
 
               <h3 className="font-medium text-sm mb-1 truncate">{post.title}</h3>
-              
+
               <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                 {expanded ? post.content : truncatedContent}
               </p>
@@ -146,7 +150,23 @@ export function LinkedInPostCard({
               )}
             </div>
 
-            {/* Actions */}
+            {/* Published Actions */}
+            {isPublished && onReuse && (
+              <div className="flex flex-col gap-2 ml-4">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onReuse}
+                  className="text-primary hover:text-primary-foreground hover:bg-primary"
+                  title="Reutilizar (Mover para Portfólio)"
+                >
+                  <Recycle className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
+
+
+            {/* Actions for Drafts */}
             {!isPublished && (
               <div className="flex flex-col gap-2">
                 <Button
@@ -169,7 +189,7 @@ export function LinkedInPostCard({
             )}
           </div>
         </CardContent>
-      </div>
-    </Card>
+      </div >
+    </Card >
   );
 }

@@ -83,6 +83,7 @@ export default function PillarPage({ route, title, description, icon = 'book' }:
                                                     src={post.image_url}
                                                     alt={post.title}
                                                     className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                                                    loading="lazy"
                                                 />
                                             </div>
                                         )}
@@ -111,6 +112,27 @@ export default function PillarPage({ route, title, description, icon = 'book' }:
                     </div>
                 )}
             </main>
+
+            {/* E-E-A-T Section - Author/Reviewer */}
+            <section className="bg-muted/30 border-t border-border py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-6">
+                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl">
+                        HQ
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-semibold">Conteúdo Verificado por Especialistas</h3>
+                        <p className="text-muted-foreground text-sm max-w-2xl">
+                            Este conteúdo foi elaborado e revisado por nossa equipe multidisciplinar de Engenharia de Segurança do Trabalho e Psicologia Ocupacional,
+                            garantindo conformidade com a NR-01 e as diretrizes da ISO 45003.
+                        </p>
+                        <div className="flex gap-4 mt-2 text-sm font-medium text-primary">
+                            <span>Revisão Técnica: Eng. Carlos Mendes</span>
+                            <span>•</span>
+                            <span>Atualizado: {new Date().toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }

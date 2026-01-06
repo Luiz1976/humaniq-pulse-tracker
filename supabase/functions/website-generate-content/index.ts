@@ -605,18 +605,21 @@ serve(async (req) => {
         const templates = BLOG_TEMPLATES[route as keyof typeof BLOG_TEMPLATES];
 
         // Filter out already used templates to ensure unique posts
-        const availableTemplates = templates.filter(
+        let availableTemplates = templates.filter(
             template => !existingTitles.includes(template.title)
         );
 
+        // REMOVED LIMIT: If no unique templates, use all templates (recycling)
         if (availableTemplates.length === 0) {
-            throw new Error(`Todos os templates da rota ${route} já foram usados. Delete alguns posts para liberar novos templates.`);
+            console.log("⚠️ All templates used. Recycling existing templates via unlimited mode.");
+            availableTemplates = [...templates];
         }
 
         for (let i = 0; i < count; i++) {
             if (availableTemplates.length === 0) {
-                console.warn(`Only ${i} posts generated - ran out of unique templates for ${route}`);
-                break;
+                // Refill again if we run out during generation
+                console.log("⚠️ Ran out of templates in loop. Refilling...");
+                availableTemplates = [...templates];
             }
 
             // Select random template from available ones
@@ -680,7 +683,14 @@ serve(async (req) => {
 
             if (slugError) throw slugError;
 
-            const slug = slugData || `${route}-${Date.now()}`;
+            let slug = slugData || `${route}-${Date.now()}`;
+
+            // SECURITY: Ensure slug is unique if we are recycling content (title already exists)
+            // Even if rpc generate_slug is smart, let's be 100% sure to avoid unique constraint error
+            if (existingTitles.includes(template.title)) {
+                const randomSuffix = Math.floor(Math.random() * 10000);
+                slug = `${slug}-${randomSuffix}`;
+            }
 
             // Get schedule info for priority
             const { data: scheduleData } = await supabase
