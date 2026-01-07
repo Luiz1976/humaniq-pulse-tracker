@@ -11,7 +11,9 @@ import {
     Zap,
     FileText,
     Menu,
-    X
+    X,
+    TrendingUp,
+    FileBarChart
 } from "lucide-react";
 
 interface NavbarProps {
@@ -25,6 +27,8 @@ const menuItems = [
     { id: "linkedin", label: "LinkedIn", icon: Linkedin },
     { id: "listener", label: "Escuta Ativa", icon: Radio },
     { id: "templates", label: "Templates", icon: MessageSquare },
+    { id: "seo-booster", label: "SEO Booster", icon: TrendingUp },
+    { id: "reports", label: "Relatórios", icon: FileBarChart },
     { id: "logs", label: "Logs", icon: Activity },
     { id: "settings", label: "Configurações", icon: Settings },
 ];

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { SchemaMarkup } from "@/components/seo/SchemaMarkup";
 import { MetaTags } from "@/components/seo/MetaTags";
+import { SeoBooster } from "@/components/seo/SeoBooster";
+import { ReportsView } from "@/components/reports/ReportsView";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { DashboardView } from "@/components/dashboard/DashboardView";
@@ -279,6 +281,20 @@ const Index = () => {
         return <ListenerView />;
       case "templates":
         return <TemplatesView />;
+      case "reports":
+        return <ReportsView />;
+      case "seo-booster":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold">SEO Booster</h1>
+                <p className="text-muted-foreground mt-1">Ferramentas de alta frequência para ranking</p>
+              </div>
+            </div>
+            <SeoBooster />
+          </div>
+        );
       case "logs":
         return <LogsView />;
       case "settings":

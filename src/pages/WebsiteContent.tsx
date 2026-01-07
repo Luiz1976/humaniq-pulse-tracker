@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/layout/Navbar";
+import { SeoBooster } from "@/components/seo/SeoBooster";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -284,6 +285,12 @@ export default function WebsiteContent() {
                                     <div className="text-2xl font-bold">{stats.published}</div>
                                 </CardContent>
                             </Card>
+                        </div>
+
+
+                        {/* SEO Booster */}
+                        <div className="mb-6">
+                            <SeoBooster />
                         </div>
 
                         {/* Schedules */}

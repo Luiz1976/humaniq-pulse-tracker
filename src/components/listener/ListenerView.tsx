@@ -8,6 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
   Radio,
   Hash,
   Search,
@@ -17,14 +25,22 @@ import {
   Pause,
   Plus,
   X,
-  Zap
+  Zap,
+  Shield,
+  MessageCircle,
+  AlertTriangle
 } from "lucide-react";
 
 export function ListenerView() {
   const { toast } = useToast();
   const [isActive, setIsActive] = useState(false);
-  const [isScanning, setIsScanning] = useState(false); // Fix: use simple loading state
+  const [isScanning, setIsScanning] = useState(false);
   const [isDeepScanning, setIsDeepScanning] = useState(false);
+
+  // New States for Risk & Human-in-the-Loop
+  const [riskLevel, setRiskLevel] = useState<'conservative' | 'moderate' | 'aggressive'>('conservative');
+  const [requireApproval, setRequireApproval] = useState(true);
+
   const [hashtags, setHashtags] = useState([
     "#NR01", "#novaNR01", "#riscospsicossociais", "#saudemental",
     "#SST", "#segurancadotrabalho", "#RH", "#climaorganizacional"
@@ -35,11 +51,31 @@ export function ListenerView() {
   ]);
   const [newKeyword, setNewKeyword] = useState("");
   const [config, setConfig] = useState({
-    delayMinutes: 15,
-    maxCommentsDay: 50,
-    postsPerSearch: 20,
+    delayMinutes: 30, // Default for conservative
+    maxCommentsDay: 20, // Default for conservative
+    postsPerSearch: 10,
     retroactiveDays: 30
   });
+
+  // Handle Risk Level Change
+  const handleRiskChange = (level: 'conservative' | 'moderate' | 'aggressive') => {
+    setRiskLevel(level);
+    switch (level) {
+      case 'conservative':
+        setConfig(prev => ({ ...prev, delayMinutes: 30, maxCommentsDay: 20 }));
+        break;
+      case 'moderate':
+        setConfig(prev => ({ ...prev, delayMinutes: 15, maxCommentsDay: 50 }));
+        break;
+      case 'aggressive':
+        setConfig(prev => ({ ...prev, delayMinutes: 5, maxCommentsDay: 100 }));
+        break;
+    }
+    toast({
+      title: "Nível de Risco Atualizado",
+      description: `Configurações ajustadas para modo ${level}.`,
+    });
+  };
 
   const handleDeepScan = async () => {
     setIsDeepScanning(true);
@@ -172,6 +208,86 @@ export function ListenerView() {
                   </>
                 )}
               </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Risk & Safety Control */}
+      <Card className="glass-card animate-fade-in" style={{ animationDelay: "150ms" }}>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center">
+              <Shield className={`w-5 h-5 ${riskLevel === 'aggressive' ? "text-destructive" :
+                  riskLevel === 'moderate' ? "text-warning" : "text-success"
+                }`} />
+            </div>
+            <div>
+              <CardTitle>Segurança da Automação (Compliance)</CardTitle>
+              <CardDescription>Defina os limites de segurança para evitar bloqueios</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Risk Level */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Nível de Risco (Rate Limits)</Label>
+                <Select
+                  value={riskLevel}
+                  onValueChange={(v: any) => handleRiskChange(v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="conservative">Conservador (Recomendado)</SelectItem>
+                    <SelectItem value="moderate">Moderado</SelectItem>
+                    <SelectItem value="aggressive">Agressivo (Risco Extremo)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-muted-foreground">
+                  {riskLevel === 'conservative' && "Foco total em segurança. Baixo volume, alta qualidade."}
+                  {riskLevel === 'moderate' && "Equilíbrio entre volume e segurança. Monitorar de perto."}
+                  {riskLevel === 'aggressive' && "Máximo volume. Alto risco de flag temporário."}
+                </p>
+              </div>
+
+              {riskLevel === 'aggressive' && (
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Cuidado!</AlertTitle>
+                  <AlertDescription>
+                    O modo agressivo pode gerar bloqueios temporários na conta. Use por períodos curtos.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+
+            {/* Human in the Loop */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label className="text-base">Human-in-the-Loop</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Exigir aprovação manual antes de postar
+                  </p>
+                </div>
+                <Switch
+                  checked={requireApproval}
+                  onCheckedChange={setRequireApproval}
+                />
+              </div>
+
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50 border border-border">
+                <MessageCircle className="w-4 h-4 text-primary" />
+                <span className="text-sm">
+                  {requireApproval
+                    ? "Comentários serão gerados como RASCUNHO."
+                    : "Comentários serão publicados AUTOMATICAMENTE."}
+                </span>
+              </div>
             </div>
           </div>
         </CardContent>
